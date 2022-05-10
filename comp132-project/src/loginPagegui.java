@@ -1,18 +1,21 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class loginPagegui implements ActionListener {
 
-	private static JPanel loginPanel;
-	private static JFrame frame;
+	protected static JPanel loginPanel;
+	protected static JFrame frame;
 	private static JLabel nicklabel;
 	private static JTextField nickField;
 	private static JLabel passwordLabel;
@@ -31,42 +34,49 @@ public class loginPagegui implements ActionListener {
 	private static JTextField ageField;
 	private static JButton registerBut;
 	private JPanel lastRegisterPanel;
+	protected static User user;
 
 
-	public static void main(String[] args) {
-		// TODO construct panels and frames
+	public static void start() {
+		System.out.println("her");
 		loginPanel = new JPanel();
 		frame = new JFrame();
 		frame.setSize(360, 640);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(loginPanel);
+		frame.getContentPane().add(loginPanel);
+		frame.setResizable(false);
 
 		loginPanel.setLayout(null);
+		loginPanel.setBackground(new Color(193, 11, 37));
+
 
 		nicklabel = new JLabel("Nickname");
-		nicklabel.setBounds(30, 60, 120, 25);
+		nicklabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		nicklabel.setHorizontalAlignment(SwingConstants.LEFT);
+		nicklabel.setBounds(59, 253, 120, 25);
 		loginPanel.add(nicklabel);
 
 		nickField = new JTextField();
-		nickField.setBounds(150, 60, 100, 25);
+		nickField.setBounds(179, 253, 100, 25);
 		loginPanel.add(nickField);
 
 		passwordLabel = new JLabel("Password");
-		passwordLabel.setBounds(30, 90, 120, 25);
+		passwordLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		passwordLabel.setBounds(59, 283, 120, 25);
 		loginPanel.add(passwordLabel);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(150, 90, 100, 25);
+		passwordField.setBounds(179, 283, 100, 25);
 		loginPanel.add(passwordField);
 
 		loginBut = new JButton("Login🔑");
-		loginBut.setBounds(190, 130, 90, 25);
-		loginBut.setForeground(Color.gray);
+		loginBut.setBounds(189, 319, 90, 25);
+		loginBut.setForeground(Color.GRAY);
 		loginBut.addActionListener(new loginPagegui());
 		loginPanel.add(loginBut);
 
-		signBut = new JButton("Sign in🖊");
-		signBut.setBounds(190, 160, 90, 25);
+		signBut = new JButton("Sign in🚀");
+		signBut.setBounds(189, 355, 90, 25);
 		signBut.addActionListener(new loginPagegui());
 		signBut.setForeground(Color.gray);
 		loginPanel.add(signBut);
@@ -75,6 +85,20 @@ public class loginPagegui implements ActionListener {
 		successLabel.setBounds(30, 130, 80, 25);
 		loginPanel.add(successLabel);
 
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(
+				"C:\\Users\\emirh\\git\\comp132-social-media-proejct\\comp132-project\\img\\248x175 ku logo.png"));
+		lblNewLabel.setBounds(52, 32, 248, 175);
+		loginPanel.add(lblNewLabel);
+
+		JLabel welcomemessage = new JLabel("<html>Welcome to the <br/> KUSocial!</html>");
+		welcomemessage.setForeground(Color.WHITE);
+		welcomemessage.setHorizontalAlignment(SwingConstants.CENTER);
+		welcomemessage.setFont(new Font("Tahoma", Font.BOLD, 24));
+		welcomemessage.setBounds(10, 420, 317, 109);
+		loginPanel.add(welcomemessage);
+
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
@@ -129,12 +153,14 @@ public class loginPagegui implements ActionListener {
 		signinPanel.add(registerBut);
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBut) {
-			if (passwordField.getText().equals("123") && nickField.getText().equals("emo")) {
+			user = User.findUser(String.valueOf(passwordField.getPassword()), nickField.getText());
+			if (!user.equals(null)) {
 				successLabel.setText("Succesfull");
+				Mainpage mainframe = new Mainpage();
+
 			} else {
 				successLabel.setText("Try again!");
 			}
@@ -142,7 +168,7 @@ public class loginPagegui implements ActionListener {
 
 			frame.getContentPane().remove(loginPanel);
 			getSigninPage();
-			frame.add(signinPanel);
+			frame.getContentPane().add(signinPanel);
 			frame.invalidate();
 			frame.repaint();
 			frame.setVisible(true);
@@ -150,7 +176,7 @@ public class loginPagegui implements ActionListener {
 		} else if (e.getSource() == registerBut) {
 			frame.getContentPane().remove(signinPanel);
 			getLastRegisterPage();
-			frame.add(lastRegisterPanel);
+			frame.getContentPane().add(lastRegisterPanel);
 			frame.invalidate();
 			frame.repaint();
 			frame.setVisible(true);
